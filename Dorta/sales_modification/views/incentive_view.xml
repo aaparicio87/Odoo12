@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem id="sale_incentive_menu"
+                  name="Incentivos"
+                  parent="sale.sale_menu_root"
+                  sequence="1"/>
+
+
+        <record id="sale_incentive_action" model="ir.actions.act_window">
+            <field name="name">Incentivos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.incentive</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban,graph,pivot</field>
+        </record>
+
+        <record id="sale_view_incentive_form" model="ir.ui.view">
+            <field name="name">sale.view.incentive.form</field>
+            <field name="model">sale.incentive</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_incentive_send" string="Send by Email" type="object" states="incentive_reg" class="btn-primary"/>
+                        <button name="print_incentive" string="Print" type="object" states="incentive_reg" class="btn-primary o_sale_print"/>
+                        <button name="action_confirm" id="action_confirm" string="Confirm" class="btn-primary" type="object" attrs="{'invisible': [('state', 'not in', ['incentive_sent'])]}" groups="sales_modification.grp_supervisor"/>
+                        <button name="action_confirm" id="action_confirm" string="Confirm" class="btn-primary" type="object" attrs="{'invisible': [('state', 'not in', ['incentive_reg'])]}" groups="sales_modification.grp_supervisor"/>
+                        <button name="action_cancel" states="incentive_reg,incentive_sent" type="object" string="Cancel"/>
+                        <field name="state" widget="statusbar" statusbar_visible="incentive_reg,incentive_sent,incentive_approved"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="region" string="Region" required="1"/>
+                                <field name="maximum_bonus" required="1"/>
+                            </group>
+                             <group>
+                                <field name="supervisor" attrs="{'invisible': [('is_seller', '=', True)], 'required': [('is_seller', '!=', True)]}"/>
+                                <field name="seller" string="Vendedor" attrs="{'invisible': [('is_supervisor', '=', True)], 'required': [('is_supervisor', '!=', True)]}"/>
+                                <field name="month" required="1"/>
+                                <field name="year" required="1"/>
+                                <field name="is_supervisor" invisible="1"/>
+                                <field name="is_seller" invisible="1"/>
+                             </group>
+                             <div class="content-group o_setting_box o_group_col_12 mt-2">
+                                    <div class="d-flex justify-content-center text-center">
+                                         <div class="col">
+                                            <label for="brands_objective" class="o_form_label" style="font-weight:bold; margin:0;"/>
+                                        </div>
+                                        <div class="col">
+                                            <label for="bonus_x_boxes" class="o_form_label" style="font-weight:bold; margin:0;"/>
+                                        </div>
+                                        <div class="col">
+                                            <label for="bonus_x_bs" class="o_form_label" style="font-weight:bold; margin:0;"/>
+                                        </div>
+                                        <div class="col">
+                                            <label for="bonus_x_qualitative" class="o_form_label" style="font-weight:bold; margin:0;"/>
+                                        </div> 
+                                        <div class="col">
+                                            <label for="bonus_brand_boxes" class="o_form_label" style="font-weight:bold; margin:0;"/>
+                                        </div>
+                                        <div class="col">
+                                            <label for="maximum_charge" class="o_form_label" style="font-weight:bold; margin:0;"/>
+                                        </div> 
+                                    </div>
+                                    <div class="d-flex justify-content-center text-center mt-1">
+                                        
+                                        <div class="col">
+                                            <field name="brands_objective" readonly="1"/>
+                                        </div>
+                                        <div class="col">
+                                            <field name="bonus_x_boxes"/>
+                                            <field name="bonus_x_boxes_total" readonly="1"/>
+                                        </div>
+                                        <div class="col">
+                                            <field name="bonus_x_bs"/>
+                                            <field name="bonus_x_bs_total" readonly="1"/>
+                                        </div>
+                                        <div class="col">
+                                            <field name="bonus_x_qualitative"/>
+                                            <field name="bonus_x_qualitative_total" readonly="1"/>
+                                        </div> 
+                                        <div class="col">
+                                            <field name="bonus_brand_boxes" readonly="1"/>
+                                        </div>
+                                        <div class="col">
+                                            <field name="maximum_charge"/>
+                                        </div> 
+                                    </div>
+                             </div>
+                           
+                        </group>
+                        <notebook>
+                            <page string="Brand Lines with Objectives">
+                                <field name="brand_line_objectives_ids" required="1">
+                                    <tree editable="bottom" string="Brand Lines with Objectives">
+                                        <field name="no_brand_objetive"/>
+                                        <field name="brand"/>
+                                        <field name="code"/>
+                                        <field name="description"/>
+                                        <field name="cupor_for_boxes"/>
+                                        <field name="space_in_bs"/>
+                                        <field name="sale_by_box"/>
+                                        <field name="sale_in_bs"/>
+                                        <field name="achievement_in_box"/>
+                                        <field name="tobe_charged_for_box"/>
+                                        <field name="charged_for_box"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                         <div class="content-group o_setting_box o_group_col_12">
+                                    <div class="d-flex justify-content-center text-center">
+                                        <div class="col">
+                                            <label for="total_cupor_for_boxes" class="o_form_label" style="font-weight:bold; margin:0;"/>
+                                        </div>
+                                        <div class="col">
+                                            <label for="total_space_in_bs" class="o_form_label" style="font-weight:bold; margin:0;"/>
+                                        </div>
+                                        <div class="col">
+                                            <label for="total_sale_by_box" class="o_form_label" style="font-weight:bold; margin:0;"/>
+                                        </div>
+                                        <div class="col">
+                                            <label for="total_sale_in_bs" class="o_form_label" style="font-weight:bold; margin:0;"/>
+                                        </div> 
+                                        <div class="col">
+                                            <label for="total_charged_by_box" class="o_form_label" style="font-weight:bold; margin:0;"/>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-center text-center mt-1">
+                                        <div class="col">
+                                            <field name="total_cupor_for_boxes" readonly="1"/>
+                                        </div>
+                                        <div class="col">
+                                            <field name="total_space_in_bs" readonly="1"/>
+                                        </div>
+                                        <div class="col">
+                                            <field name="total_sale_by_box" readonly="1"/>
+                                        </div>
+                                        <div class="col">
+                                            <field name="total_sale_in_bs" readonly="1"/>
+                                        </div> 
+                                        <div class="col">
+                                            <field name="total_charged_by_box" readonly="1"/>
+                                        </div>
+                                    </div>
+                            </div>
+                             <group col="3">
+                                <group>
+                                    <label for="achievement_percent"/>
+                                    <div>       
+                                        <field name="achievement_percent" readonly="1" class="oe_inline" /> %
+                                    </div>
+                                     <label for="achievement_to_collect_percent"/>
+                                    <div> 
+                                        <field name="achievement_to_collect_percent" readonly="1" class="oe_inline"/> %
+                                    </div>
+                                </group>
+                                <group>
+                                    <field name="incentive_bs" readonly="1"/>
+                                    <field name="incentive_x_box" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="total_incentive" readonly="1"/>
+                                </group>
+                            </group> 
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="brand_code_form" model="ir.ui.view">
+            <field name="name">brand.code.form</field>
+            <field name="model">brand.code</field>
+            <field name="arch" type="xml">
+                <form string="Brand">
+                    <sheet>
+                        <group>
+                            <field name="code"/>
+                            <field name="brand"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="brand_code_tree" model="ir.ui.view">
+            <field name="name">brand.code.tree</field>
+            <field name="model">brand.code</field>
+            <field name="arch" type="xml">
+                <tree string="Brand">
+                    <field name="code"/>
+                    <field name="brand"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="brand_code_action" model="ir.actions.act_window">
+            <field name="name">Brand</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">brand.code</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="region_incentive_form" model="ir.ui.view">
+            <field name="name">region.incentive.form</field>
+            <field name="model">region.incentive</field>
+            <field name="arch" type="xml">
+                <form string="Region">
+                    <sheet>
+                        <group>
+                            <field name="code"/>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="region_incentive_tree" model="ir.ui.view">
+            <field name="name">region.incentive.tree</field>
+            <field name="model">region.incentive</field>
+            <field name="arch" type="xml">
+                <tree string="Region">
+                    <field name="code"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="sale_view_incentive_tree" model="ir.ui.view">
+            <field name="name">sale.view.incentive.tree</field>
+            <field name="model">sale.incentive</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="region" string="Región"/>
+                    <field name="month_year"/>
+                    <field name="supervisor"/>
+                    <field name="seller"/>
+                    <field name="total_region"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="sale_view_incentive_kanban" model="ir.ui.view">
+            <field name="name">sale.view.incentive.kanban</field>
+            <field name="model">sale.incentive</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="maximum_bonus"/>
+                    <field name="region" string="Region"/>
+                    <field name="month_year"/>
+                    <field name="supervisor"/>
+                    <field name="seller"/>
+                    <field name="total_region"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="oe_kanban_details">
+                                    <strong class="o_kanban_record_title" style="text-right">
+                                        <field name="maximum_bonus"/>
+                                    </strong>
+                                    <div>
+                                        <div><b>Seller:</b>
+                                            <field name="seller"/>
+                                        </div>
+                                        <div><b>Supervisor:</b>
+                                            <field name="supervisor"/>
+                                        </div>
+                                        <div><b>Year:</b>
+                                            <field name="year"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="sale_view_incentive_search" model="ir.ui.view">
+            <field name="name">sale.view.incentive.search</field>
+            <field name="model">sale.incentive</field>
+            <field name="arch" type="xml">
+                <search string="Sale Incentive System">
+                    <field name="region"/>
+                    <field name="seller"/>
+                    <field name="supervisor"/>
+                    <field name="month"/>
+                    <field name="year"/>
+                    <field name="total_region"/>
+                    <field name="maximum_bonus"/>
+                    <field name="bonus_x_boxes"/>
+                    <field name="bonus_x_boxes_total"/>
+                    <field name="bonus_x_bs"/>
+                    <field name="bonus_x_bs_total"/>
+                    <field name="bonus_x_qualitative"/>
+                    <field name="brands_objective"/>
+                    <field name="bonus_brand_boxes"/>
+                    <field name="maximum_charge"/>
+                    <filter string="Region" name="region" context="{'group_by':'region'}"/>
+                    <filter string="Supervisor" name="supervisor" context="{'group_by':'supervisor'}"/>
+                    <filter string="Month" name="month" context="{'group_by':'month'}"/>
+                    <filter string="Year" name="year" context="{'group_by':'year'}"/>
+                    <filter string="Seller" name="seller" context="{'group_by':'seller'}"/>
+                    <filter string="Total Region" name="total_region" context="{'group_by':'total_region'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="sale_view_incentive_search_report" model="ir.ui.view">
+            <field name="name">incentive.line.incentive.search</field>
+            <field name="model">incentive.line</field>
+            <field name="arch" type="xml">
+                <search string="Sale Incentive System">
+                    <field name="sale_incentive_id"/>
+                    <field name="region"/>
+                    <field name="seller"/>
+                    <field name="supervisor"/>
+                    <field name="month"/>
+                    <field name="year"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Region" name="region" context="{'group_by':'region'}"/>
+                        <filter string="Seller" name="seller" context="{'group_by':'seller'}"/>
+                        <filter string="Supervisor" name="Supervisor" context="{'group_by':'supervisor'}"/>
+                        <filter string="Month" name="month" context="{'group_by':'month'}"/>
+                        <filter string="Year" name="year" context="{'group_by':'year'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_incentives_report_all" model="ir.actions.act_window">
+            <field name="name">Reporte Incentivos</field>
+            <field name="res_model">incentive.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,pivot,tree,kanban</field>
+            <field name="view_id"></field>  <!-- force empty -->
+            <field name="search_view_id" ref="sale_view_incentive_search_report"/>
+        </record>
+
+        <record model="ir.ui.view" id="view_incentive_pivot">
+            <field name="name">sale.incentive.pivot</field>
+            <field name="model">sale.incentive</field>
+            <field name="arch" type="xml">
+                <pivot string="Incentive System">
+                    <field name="region" string="Region"/>
+                    <field name="seller"/>
+                    <field name="supervisor"/>
+                    <field name="month"/>
+                    <field name="year"/>
+                    <field name="total_region"/>
+                    <field name="maximum_bonus"/>
+                    <field name="bonus_x_boxes"/>
+                    <field name="bonus_x_boxes_total"/>
+                    <field name="bonus_x_bs"/>
+                    <field name="bonus_x_bs_total"/>
+                    <field name="bonus_x_qualitative"/>
+                    <field name="brands_objective"/>
+                    <field name="bonus_brand_boxes"/>
+                    <field name="maximum_charge"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_incentive_graph">
+            <field name="name">incentive.line.graph</field>
+            <field name="model">incentive.line</field>
+            <field name="arch" type="xml">
+                <graph string="Incentive System" type="line">
+                    <field name="sale_incentive_id"/>
+                    <field name="incentive_by_box"/>
+                </graph>
+            </field>
+        </record>
+
+        <menuitem id="menu_report_incentive"
+            name="Incentivos"
+            action="action_incentives_report_all"
+            parent="sale.menu_sale_report"
+            />
+        <menuitem id="sale_incentive_submenu" name="Incentivos"
+                  parent="sale_incentive_menu" action="sale_incentive_action"
+                  sequence="1"/>
+    </data>
+</odoo>
